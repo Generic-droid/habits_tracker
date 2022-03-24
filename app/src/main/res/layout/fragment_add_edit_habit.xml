@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="ru.vidos.habitstracker.HabitsTrackerViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/start_guideline"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="@dimen/default_margin" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/end_guideline"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_end="@dimen/default_margin" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/title_input_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:layout_weight="1"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:errorText="@{viewModel.titleError}"
+                    app:hintTextColor="#0000FF"
+                    app:layout_constraintEnd_toEndOf="@id/end_guideline"
+                    app:layout_constraintStart_toStartOf="@id/start_guideline"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:fontFamily="@font/adamina"
+                        android:hint="@string/title"
+                        android:inputType="text"
+                        android:scrollbarStyle="outsideInset"
+                        android:text="@={viewModel.currentHabit.title}"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/description_input_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/min_margin"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    app:errorEnabled="true"
+                    app:errorText="@{viewModel.descriptionError}"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toEndOf="@id/end_guideline"
+                    app:layout_constraintStart_toStartOf="@id/start_guideline"
+                    app:layout_constraintTop_toBottomOf="@id/title_input_layout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:fontFamily="@font/adamina"
+                        android:gravity="top"
+                        android:hint="@string/description"
+                        android:inputType="textMultiLine"
+                        android:lines="2"
+                        android:text="@={viewModel.currentHabit.description}"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Spinner
+                    android:id="@+id/habit_priority_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/min_margin"
+                    android:entries="@array/habitPriority"
+                    android:minHeight="48dp"
+                    android:selectedItemPosition="@={viewModel.currentHabit.priority}"
+                    app:layout_constraintEnd_toEndOf="@id/end_guideline"
+                    app:layout_constraintStart_toStartOf="@id/start_guideline"
+                    app:layout_constraintTop_toBottomOf="@id/description_input_layout" />
+
+                <RadioGroup
+                    android:id="@+id/habit_type_radio_group"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/min_margin"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="@id/end_guideline"
+                    app:layout_constraintStart_toStartOf="@id/start_guideline"
+                    app:layout_constraintTop_toBottomOf="@id/habit_priority_spinner">
+
+                    <RadioButton
+                        android:id="@+id/radio_good"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={viewModel.currentHabit.type}"
+                        android:text="@string/good_habit" />
+
+                    <RadioButton
+                        android:id="@+id/radio_bad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="@string/bad_habit" />
+
+                </RadioGroup>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/quantity_input_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/min_margin"
+                    android:layout_marginEnd="@dimen/min_margin"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:errorText="@{viewModel.quantityError}"
+                    app:layout_constraintEnd_toStartOf="@+id/periodicity_input_layout"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="@id/start_guideline"
+                    app:layout_constraintTop_toBottomOf="@id/habit_type_radio_group">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/quantity"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:fontFamily="@font/adamina"
+                        android:hint="@string/quantity"
+                        android:inputType="numberDecimal"
+                        android:text="@={viewModel.currentHabit.quantity}"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/periodicity_input_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/min_margin"
+                    android:layout_marginTop="@dimen/min_margin"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:errorText="@{viewModel.periodicityError}"
+                    app:layout_constraintEnd_toEndOf="@id/end_guideline"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/quantity_input_layout"
+                    app:layout_constraintTop_toBottomOf="@id/habit_type_radio_group">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/periodicity"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:fontFamily="@font/adamina"
+                        android:hint="@string/periodicity"
+                        android:inputType="text"
+                        android:text="@={viewModel.currentHabit.periodicity}"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</layout>

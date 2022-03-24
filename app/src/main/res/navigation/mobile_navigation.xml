@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    android:label="@string/add_habit"
+    app:startDestination="@id/habitsListFragment">
+    <fragment
+        android:id="@+id/habitsListFragment"
+        android:name="ru.vidos.habitstracker.ui.home.HabitsListFragment"
+        android:label="HabitsListFragment" >
+        <action
+            android:id="@+id/action_habitsListFragment_to_addEditFragment"
+            app:destination="@id/addEditFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditFragment"
+        android:name="ru.vidos.habitstracker.ui.home.AddEditFragment"
+        android:label="AddEditFragment" />
+    <fragment
+        android:id="@+id/nav_info"
+        android:name="ru.vidos.habitstracker.ui.appinfo.AppInfoFragment"
+        android:label="AppInfoFragment" />
+    <fragment
+        android:id="@+id/habitsListFragment"
+        android:name="ru.vidos.habitstracker.ui.home.HabitsViewPager"
+        android:label="HabitsViewPager" />
+    <action
+        android:id="@+id/action_global_addEditFragment"
+        app:destination="@id/addEditFragment" />
+</navigation>
