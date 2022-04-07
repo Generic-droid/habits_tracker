@@ -6,7 +6,7 @@
     <data>
         <variable
             name="habit"
-            type="ru.vidos.habitstracker.data.Habit" />
+            type="ru.vidos.habitstracker.models.Habit" />
 
     </data>
 

@@ -8,7 +8,8 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 import ru.vidos.habitstracker.R
-import ru.vidos.habitstracker.data.Habit
+import ru.vidos.habitstracker.models.Habit
+import ru.vidos.habitstracker.utils.HabitTypes
 
 
 const val LOG_TAG = "myLogs"
@@ -19,7 +20,6 @@ fun bindDealsRecyclerView(recyclerView: RecyclerView, data: List<Habit>?) {
     val adapter = recyclerView.adapter as HabitsRecyclerViewAdapter
 
     // This call notifies the RecyclerView that a new list of data is ready.
-    adapter.submitList(null)
     adapter.submitList(data)
 
     Log.d(LOG_TAG, "BindingAdapter: $data, $adapter")
@@ -30,7 +30,7 @@ fun bindDealsRecyclerView(recyclerView: RecyclerView, data: List<Habit>?) {
 fun ImageView.setTintDrawable(item: Habit) {
 
     setColorFilter(
-        if(item.type) {
+        if(item.type == HabitTypes.GOOD.name) {
             item.color.toColorInt()
         } else "#FF0000".toColorInt()
             )
@@ -47,7 +47,7 @@ fun TextView.setPriority(item: Habit) {
 @BindingAdapter("src")
 fun ImageView.setDrawable(item: Habit) {
     setImageResource(
-        if (item.type) {
+        if (item.type == HabitTypes.GOOD.name) {
             R.drawable.ic_good_habit_smile
         }   else  R.drawable.ic_bad_habit_smile
     )

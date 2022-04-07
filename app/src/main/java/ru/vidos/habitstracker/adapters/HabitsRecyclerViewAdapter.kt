@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ru.vidos.habitstracker.data.Habit
+import ru.vidos.habitstracker.models.Habit
 import ru.vidos.habitstracker.databinding.HabitItemBinding
 
 class HabitsRecyclerViewAdapter(private val onItemClicked: (Habit) -> Unit) : ListAdapter<Habit,

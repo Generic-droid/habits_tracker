@@ -4,8 +4,11 @@
 
     <data>
         <variable
-            name="viewModel"
-            type="ru.vidos.habitstracker.HabitsTrackerViewModel" />
+            name="addEditHabitViewModel"
+            type="ru.vidos.habitstracker.ui.home.addedit.AddEditHabitViewModel" />
+        <variable
+            name="habitType"
+            type="ru.vidos.habitstracker.utils.HabitTypes" />
     </data>
 
     <LinearLayout
@@ -46,7 +49,7 @@
                     android:layout_weight="1"
                     app:endIconMode="clear_text"
                     app:errorEnabled="true"
-                    app:errorText="@{viewModel.titleError}"
+                    app:errorText="@{addEditHabitViewModel.titleError}"
                     app:hintTextColor="#0000FF"
                     app:layout_constraintEnd_toEndOf="@id/end_guideline"
                     app:layout_constraintStart_toStartOf="@id/start_guideline"
@@ -62,7 +65,7 @@
                         android:hint="@string/title"
                         android:inputType="text"
                         android:scrollbarStyle="outsideInset"
-                        android:text="@={viewModel.currentHabit.title}"/>
+                        android:text="@={addEditHabitViewModel.currentHabit.title}"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,7 +78,7 @@
                     android:layout_weight="1"
                     android:background="@null"
                     app:errorEnabled="true"
-                    app:errorText="@{viewModel.descriptionError}"
+                    app:errorText="@{addEditHabitViewModel.descriptionError}"
                     app:endIconMode="clear_text"
                     app:layout_constraintEnd_toEndOf="@id/end_guideline"
                     app:layout_constraintStart_toStartOf="@id/start_guideline"
@@ -92,7 +95,7 @@
                         android:hint="@string/description"
                         android:inputType="textMultiLine"
                         android:lines="2"
-                        android:text="@={viewModel.currentHabit.description}"/>
+                        android:text="@={addEditHabitViewModel.currentHabit.description}"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Spinner
@@ -102,7 +105,7 @@
                     android:layout_marginTop="@dimen/min_margin"
                     android:entries="@array/habitPriority"
                     android:minHeight="48dp"
-                    android:selectedItemPosition="@={viewModel.currentHabit.priority}"
+                    android:selectedItemPosition="@={addEditHabitViewModel.currentHabit.priority}"
                     app:layout_constraintEnd_toEndOf="@id/end_guideline"
                     app:layout_constraintStart_toStartOf="@id/start_guideline"
                     app:layout_constraintTop_toBottomOf="@id/description_input_layout" />
@@ -122,7 +125,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:checked="@={viewModel.currentHabit.type}"
+                        android:checked="@{addEditHabitViewModel.currentHabit.type.equals(habitType.GOOD.name)}"
+                        android:onClick="@{() -> addEditHabitViewModel.setHabitType(habitType.GOOD)}"
                         android:text="@string/good_habit" />
 
                     <RadioButton
@@ -130,7 +134,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:checked="true"
+                        android:checked="@{addEditHabitViewModel.currentHabit.type.equals(habitType.BAD.name)}"
+                        android:onClick="@{() -> addEditHabitViewModel.setHabitType(habitType.BAD)}"
                         android:text="@string/bad_habit" />
 
                 </RadioGroup>
@@ -146,7 +151,7 @@
                     android:background="@null"
                     app:endIconMode="clear_text"
                     app:errorEnabled="true"
-                    app:errorText="@{viewModel.quantityError}"
+                    app:errorText="@{addEditHabitViewModel.quantityError}"
                     app:layout_constraintEnd_toStartOf="@+id/periodicity_input_layout"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="@id/start_guideline"
@@ -161,7 +166,7 @@
                         android:fontFamily="@font/adamina"
                         android:hint="@string/quantity"
                         android:inputType="numberDecimal"
-                        android:text="@={viewModel.currentHabit.quantity}"/>
+                        android:text="@={addEditHabitViewModel.currentHabit.quantity}"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -175,7 +180,7 @@
                     android:background="@null"
                     app:endIconMode="clear_text"
                     app:errorEnabled="true"
-                    app:errorText="@{viewModel.periodicityError}"
+                    app:errorText="@{addEditHabitViewModel.periodicityError}"
                     app:layout_constraintEnd_toEndOf="@id/end_guideline"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/quantity_input_layout"
@@ -190,7 +195,7 @@
                         android:fontFamily="@font/adamina"
                         android:hint="@string/periodicity"
                         android:inputType="text"
-                        android:text="@={viewModel.currentHabit.periodicity}"/>
+                        android:text="@={addEditHabitViewModel.currentHabit.periodicity}"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>

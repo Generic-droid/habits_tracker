@@ -4,27 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     android:label="@string/add_habit"
-    app:startDestination="@id/habitsListFragment">
+    app:startDestination="@id/nav_home">
+
     <fragment
-        android:id="@+id/habitsListFragment"
+        android:id="@+id/nav_home"
+        android:name="ru.vidos.habitstracker.ui.home.HabitsViewPager"
+        android:label="My Habits" />
+    <fragment
+        android:id="@+id/nav_info"
+        android:name="ru.vidos.habitstracker.ui.appinfo.AppInfoFragment"
+        android:label="AppInfo" />
+    <fragment
+        android:id="@+id/habitsListFragment2"
         android:name="ru.vidos.habitstracker.ui.home.HabitsListFragment"
         android:label="HabitsListFragment" >
         <action
-            android:id="@+id/action_habitsListFragment_to_addEditFragment"
+            android:id="@+id/action_habitsListFragment2_to_addEditFragment"
             app:destination="@id/addEditFragment" />
     </fragment>
     <fragment
         android:id="@+id/addEditFragment"
-        android:name="ru.vidos.habitstracker.ui.home.AddEditFragment"
-        android:label="AddEditFragment" />
-    <fragment
-        android:id="@+id/nav_info"
-        android:name="ru.vidos.habitstracker.ui.appinfo.AppInfoFragment"
-        android:label="AppInfoFragment" />
-    <fragment
-        android:id="@+id/habitsListFragment"
-        android:name="ru.vidos.habitstracker.ui.home.HabitsViewPager"
-        android:label="HabitsViewPager" />
+        android:name="ru.vidos.habitstracker.ui.home.addedit.AddEditHabitFragment"
+        android:label="Editor" >
+        <argument
+            android:name="currentHabit"
+            app:argType="ru.vidos.habitstracker.models.Habit"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
     <action
         android:id="@+id/action_global_addEditFragment"
         app:destination="@id/addEditFragment" />

@@ -22,6 +22,8 @@
     <string name="repetition">Repeat %1$s times %2$s</string>
     <string name="good">GOOD</string>
     <string name="bad">BAD</string>
+    <string name="habit_added">New habit added</string>
+    <string name="changes_saved">Changes saved</string>
 
     <string-array name="habitPriority">
         <item>High</item>
@@ -32,5 +34,8 @@
     <string name="menu_home">Home</string>
     <string name="add_habit">Add Habit</string>
     <string name="menu_info">Info</string>
+    <string name="show_bottom_sheet">Show bottom sheet</string>
+    <string name="search">Search</string>
+    <string name="sorts">Sorts</string>
 
 </resources>

@@ -14,6 +14,7 @@ import ru.vidos.habitstracker.HabitsTrackerViewModelFactory
 import ru.vidos.habitstracker.R
 import ru.vidos.habitstracker.adapters.HabitsViewPagerAdapter
 import ru.vidos.habitstracker.databinding.HabitsViewPagerBinding
+import ru.vidos.habitstracker.utils.HabitTypes
 
 class HabitsViewPager : Fragment() {
 
@@ -45,13 +46,12 @@ class HabitsViewPager : Fragment() {
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
             override fun onPageSelected(position: Int) {
+
                 if (position == 0) {
-                    // FIXME LATER
-                    //viewModel.sortHabits(true)
+                    viewModel.sortHabitsByType(HabitTypes.GOOD)
                 }
                 else if (position == 1) {
-                    // FIXME LATER
-                    //viewModel.sortHabits(false)
+                    viewModel.sortHabitsByType(HabitTypes.BAD)
                 }
                 super.onPageSelected(position)
             }

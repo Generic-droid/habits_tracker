@@ -1,88 +1,44 @@
 package ru.vidos.habitstracker
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import ru.vidos.habitstracker.data.Habit
+import androidx.lifecycle.*
+import ru.vidos.habitstracker.models.Habit
+import ru.vidos.habitstracker.utils.HabitTypes
 
 class HabitsTrackerViewModel(private val repository: HabitsTrackerRepository) : ViewModel() {
 
+    // List of Habits to display to user
     private val _habitsList = MutableLiveData<List<Habit>>()
-    val habitsList: LiveData<List<Habit>> = _habitsList
-
-    var currentHabit: Habit
-
-    private val _titleError = MutableLiveData<String?>(null)
-    val titleError: LiveData<String?> = _titleError
-
-    private val _descriptionError = MutableLiveData<String?>(null)
-    val descriptionError: LiveData<String?> = _descriptionError
-
-    private val _quantityError = MutableLiveData<String?>(null)
-    val quantityError: LiveData<String?> = _quantityError
-
-    private val _periodicityError = MutableLiveData<String?>(null)
-    val periodicityError: LiveData<String?> = _periodicityError
+    val habitsList: LiveData<List<Habit>> get() = _habitsList
 
     init {
         _habitsList.value = repository.getHabits()
-
-        currentHabit = Habit(
-            id = 0,
-            color = "#ADFF2F",
-            title = "",
-            description = "",
-            priority = 0,
-            type = true,
-            quantity = "",
-            periodicity = ""
-        )
     }
 
-    fun isFieldsNotEmpty(): Boolean {
+    fun sortHabitsByType(type: HabitTypes) {
 
-        return when {
-            currentHabit.title.isBlank() -> {
-                _titleError.value = "Empty title"
-                false
-            }
-            currentHabit.description.isBlank() -> {
-                _descriptionError.value = "Empty description"
-                false
-            }
-            currentHabit.quantity.isBlank() -> {
-                _quantityError.value = "Empty quantity"
-                false
-            }
-            currentHabit.periodicity.isBlank() -> {
-                _periodicityError.value = "Empty periodicity"
-                false
-            }
-            else -> { true }
-        }
+        _habitsList.value =
+            repository.getHabits().filter { it.type == type.name }
+
     }
 
-    fun saveHabit () {
-        currentHabit.id ++
-        repository.addHabit(currentHabit)
-    }
-/*
-    fun sortHabits(condition: Boolean) {
-        val sortedList = mutableListOf<Habit>()
-        habitsList.value?.forEach {
-            Log.d("my", "Type: ${it.type}")
-            if (it.type == condition) {
-                sortedList.add(it)
-            }
-        }
-        habitsList.value = sortedList
+    fun sortHabitsByTitle(title: String) {
 
-        Log.d("my", "List in model: $sortedList")
+        _habitsList.value =
+            repository.getHabits().filter { it.title.startsWith(title) }
     }
 
- */
+    fun sortHabitsHighToLow() {
+
+        _habitsList.value =
+            repository.getHabits().sortedBy { it.priority }
+
+    }
+
+    fun sortHabitsLowToHigh() {
+
+        _habitsList.value =
+            repository.getHabits().sortedByDescending { it.priority }
+    }
 }
 
 class HabitsTrackerViewModelFactory(private val repository: HabitsTrackerRepository) :

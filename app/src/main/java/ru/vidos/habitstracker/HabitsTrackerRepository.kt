@@ -1,6 +1,6 @@
 package ru.vidos.habitstracker
 
-import ru.vidos.habitstracker.data.Habit
+import ru.vidos.habitstracker.models.Habit
 
 class HabitsTrackerRepository {
 
@@ -12,5 +12,10 @@ class HabitsTrackerRepository {
 
     fun addHabit(habit: Habit) {
         habitsList.add(habit)
+    }
+
+    fun updateHabit(habit: Habit) {
+
+        habitsList[habitsList.indexOf(habit)] = habit
     }
 }
