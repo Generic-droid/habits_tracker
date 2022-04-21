@@ -24,6 +24,10 @@ class HabitsRecyclerViewAdapter(private val onItemClicked: (Habit) -> Unit) : Li
 
             }
 
+    fun getHabitAt(position: Int): Habit {
+        return getItem(position)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitsViewHolder {
         return HabitsViewHolder(
             HabitItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)

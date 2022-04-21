@@ -6,38 +6,40 @@ import ru.vidos.habitstracker.utils.HabitTypes
 
 class HabitsTrackerViewModel(private val repository: HabitsTrackerRepository) : ViewModel() {
 
-    // List of Habits to display to user
     private val _habitsList = MutableLiveData<List<Habit>>()
-    val habitsList: LiveData<List<Habit>> get() = _habitsList
 
-    init {
-        _habitsList.value = repository.getHabits()
-    }
+    // List of Habits to display to user
+    val habitsList: LiveData<List<Habit>> = repository.getHabits()
 
-    fun sortHabitsByType(type: HabitTypes) {
+    fun filterHabitsByType(type: HabitTypes) {
 
         _habitsList.value =
-            repository.getHabits().filter { it.type == type.name }
+            repository.getHabits().value?.filter { it.type == type.name }
 
     }
 
-    fun sortHabitsByTitle(title: String) {
+    fun filterHabitsByTitle(title: String) {
 
         _habitsList.value =
-            repository.getHabits().filter { it.title.startsWith(title) }
+            repository.getHabits().value?.filter { it.title.startsWith(title) }
+
     }
 
     fun sortHabitsHighToLow() {
 
         _habitsList.value =
-            repository.getHabits().sortedBy { it.priority }
+            repository.getHabits().value?.sortedBy { it.priority }
 
     }
 
     fun sortHabitsLowToHigh() {
 
         _habitsList.value =
-            repository.getHabits().sortedByDescending { it.priority }
+            repository.getHabits().value?.sortedByDescending { it.priority }
+    }
+
+    fun deleteHabit(habit: Habit) {
+        repository.deleteHabit(habit)
     }
 }
 

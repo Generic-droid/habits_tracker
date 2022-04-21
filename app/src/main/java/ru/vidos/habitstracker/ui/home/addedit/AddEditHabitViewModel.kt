@@ -87,7 +87,7 @@ class AddEditHabitViewModel(
     fun saveHabit(): Boolean {
         return if (isFieldsNotEmpty()) {
             currentHabit.value?.let {
-                repository.addHabit(it)
+                repository.insertHabit(it)
             }
             true
         } else false
@@ -96,14 +96,7 @@ class AddEditHabitViewModel(
     fun changeHabit(): Boolean {
         return if (isFieldsNotEmpty() && habit != null) {
             currentHabit.value?.let {
-                habit.id = it.id
-                habit.color = it.color
-                habit.title = it.title
-                habit.description = it.description
-                habit.priority = it.priority
-                habit.type = it.type
-                habit.quantity = it.quantity
-                habit.periodicity = it.periodicity
+                repository.updateHabit(it)
             }
             true
         } else false

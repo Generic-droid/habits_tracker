@@ -48,10 +48,10 @@ class HabitsViewPager : Fragment() {
             override fun onPageSelected(position: Int) {
 
                 if (position == 0) {
-                    viewModel.sortHabitsByType(HabitTypes.GOOD)
+                    viewModel.filterHabitsByType(HabitTypes.GOOD)
                 }
                 else if (position == 1) {
-                    viewModel.sortHabitsByType(HabitTypes.BAD)
+                    viewModel.filterHabitsByType(HabitTypes.BAD)
                 }
                 super.onPageSelected(position)
             }

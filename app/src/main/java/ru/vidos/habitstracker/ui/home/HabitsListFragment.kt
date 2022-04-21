@@ -7,6 +7,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ru.vidos.habitstracker.HabitsTrackerApplication
 import ru.vidos.habitstracker.HabitsTrackerViewModel
@@ -72,6 +73,22 @@ class HabitsListFragment : Fragment() {
             }
         })
 
+        ItemTouchHelper(
+            object :
+                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    viewModel.deleteHabit(adapter.getHabitAt(viewHolder.absoluteAdapterPosition))
+                }
+            }).attachToRecyclerView(binding.habitsRecyclerView)
+
         /*
          Ensures that all the clicks/events of
          view correctly works when app is running.
@@ -109,11 +126,11 @@ class HabitsListFragment : Fragment() {
 
         search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
+                return true
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                viewModel.sortHabitsByTitle(newText)
+                viewModel.filterHabitsByTitle(newText)
                 Log.d("HabitsList", "Search: $newText")
                 return true
             }

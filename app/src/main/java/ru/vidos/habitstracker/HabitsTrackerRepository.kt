@@ -1,21 +1,25 @@
 package ru.vidos.habitstracker
 
+import androidx.lifecycle.LiveData
+import ru.vidos.habitstracker.data.HabitsDataBaseDao
 import ru.vidos.habitstracker.models.Habit
 
-class HabitsTrackerRepository {
+class HabitsTrackerRepository(private val habitsDataBaseDao: HabitsDataBaseDao) {
 
-    private val habitsList = mutableListOf<Habit>()
 
-    fun getHabits(): List<Habit>{
-        return habitsList
+    fun getHabits(): LiveData<List<Habit>>{
+        return habitsDataBaseDao.getHabits()
     }
 
-    fun addHabit(habit: Habit) {
-        habitsList.add(habit)
+    fun insertHabit(habit: Habit) {
+        habitsDataBaseDao.insert(habit)
     }
 
     fun updateHabit(habit: Habit) {
+        habitsDataBaseDao.update(habit)
+    }
 
-        habitsList[habitsList.indexOf(habit)] = habit
+    fun deleteHabit(habit: Habit) {
+        habitsDataBaseDao.delete(habit)
     }
 }
