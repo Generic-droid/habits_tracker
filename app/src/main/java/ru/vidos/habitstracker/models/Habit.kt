@@ -31,3 +31,15 @@ data class Habit(
     @ColumnInfo(name = "repeat_periodicity")
     var periodicity: String
 ) : Serializable
+
+enum class SortTypes {
+    NONE, ASC, DESC
+}
+
+enum class HabitPriority {
+    HIGH, MEDIUM, LOW
+}
+
+enum class HabitTypes(val type: String) {
+    GOOD("good"), BAD("bad")
+}

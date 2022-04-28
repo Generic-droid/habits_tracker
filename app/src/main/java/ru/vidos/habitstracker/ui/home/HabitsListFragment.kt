@@ -1,8 +1,8 @@
 package ru.vidos.habitstracker.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -86,6 +86,9 @@ class HabitsListFragment : Fragment() {
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     viewModel.deleteHabit(adapter.getHabitAt(viewHolder.absoluteAdapterPosition))
+                    Toast.makeText(
+                        activity, resources.getString(R.string.habit_deleted), Toast.LENGTH_SHORT
+                    ).show()
                 }
             }).attachToRecyclerView(binding.habitsRecyclerView)
 
@@ -130,8 +133,7 @@ class HabitsListFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                viewModel.filterHabitsByTitle(newText)
-                Log.d("HabitsList", "Search: $newText")
+                viewModel.setSearchInput(newText)
                 return true
             }
         })

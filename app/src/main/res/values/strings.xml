@@ -23,6 +23,7 @@
     <string name="good">GOOD</string>
     <string name="bad">BAD</string>
     <string name="habit_added">New habit added</string>
+    <string name="habit_deleted">Habit deleted</string>
     <string name="changes_saved">Changes saved</string>
 
     <string-array name="habitPriority">
@@ -37,5 +38,10 @@
     <string name="show_bottom_sheet">Show bottom sheet</string>
     <string name="search">Search</string>
     <string name="sorts">Sorts</string>
+
+    <string name="empty_title">Empty title</string>
+    <string name="empty_description">Empty description</string>
+    <string name="empty_quantity">Empty quantity</string>
+    <string name="empty_periodicity">Empty periodicity</string>
 
 </resources>

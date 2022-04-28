@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 import ru.vidos.habitstracker.R
 import ru.vidos.habitstracker.models.Habit
-import ru.vidos.habitstracker.utils.HabitTypes
+import ru.vidos.habitstracker.models.HabitTypes
 
 
 const val LOG_TAG = "myLogs"

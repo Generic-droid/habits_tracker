@@ -15,7 +15,7 @@ class AddEditHabitFragment : Fragment() {
 
     private val args: AddEditHabitFragmentArgs by navArgs()
 
-    private val addEditHabitViewModel: AddEditHabitViewModel by viewModels {
+    private val viewModel: AddEditHabitViewModel by viewModels {
         AddEditHabitViewModelFactory(
             (activity?.application as HabitsTrackerApplication)
                 .habitsTrackerRepository, args.currentHabit
@@ -40,7 +40,7 @@ class AddEditHabitFragment : Fragment() {
         binding.lifecycleOwner = this
 
         // Giving the binding access to the AddEditHabitViewModel
-        binding.addEditHabitViewModel = addEditHabitViewModel
+        binding.addEditHabitViewModel = viewModel
 
         /*
          Ensures that all the clicks/events of
@@ -77,7 +77,8 @@ class AddEditHabitFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.save_habit -> {
-                if (addEditHabitViewModel.saveHabit()) {
+                if (isFieldsNotEmpty()) {
+                    viewModel.saveHabit()
                     Toast.makeText(
                         activity, resources.getString(R.string.habit_added), Toast.LENGTH_SHORT
                     ).show()
@@ -86,7 +87,8 @@ class AddEditHabitFragment : Fragment() {
                 false
             }
             R.id.edit_habit -> {
-                if (addEditHabitViewModel.changeHabit()) {
+                if (isFieldsNotEmpty()) {
+                    viewModel.changeHabit()
                     Toast.makeText(
                         activity, resources.getString(R.string.changes_saved), Toast.LENGTH_SHORT
                     ).show()
@@ -95,6 +97,28 @@ class AddEditHabitFragment : Fragment() {
                 false
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun isFieldsNotEmpty(): Boolean {
+        return when {
+            viewModel.currentHabit.value?.title.isNullOrBlank() -> {
+                viewModel.setTitleError(resources.getString(R.string.empty_title))
+                false
+            }
+            viewModel.currentHabit.value?.description.isNullOrBlank() -> {
+                viewModel.setDescriptionError(resources.getString(R.string.empty_description))
+                false
+            }
+            viewModel.currentHabit.value?.quantity.isNullOrBlank() -> {
+                viewModel.setQuantityError(resources.getString(R.string.empty_quantity))
+                false
+            }
+            viewModel.currentHabit.value?.periodicity.isNullOrBlank() -> {
+                viewModel.setPeriodicityError(resources.getString(R.string.empty_quantity))
+                false
+            }
+            else -> { true }
         }
     }
 }

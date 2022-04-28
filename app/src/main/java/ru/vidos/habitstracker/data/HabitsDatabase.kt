@@ -40,8 +40,6 @@ abstract class HabitsDatabase : RoomDatabase() {
                         "habits_database"
                     )
                         .fallbackToDestructiveMigration()
-                        //FIXME LATER
-                        .allowMainThreadQueries()
                         .build()
 
                     INSTANCE = instance

@@ -3,35 +3,28 @@ package ru.vidos.habitstracker.data
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import ru.vidos.habitstracker.models.Habit
-import ru.vidos.habitstracker.utils.HabitTypes
+import ru.vidos.habitstracker.models.HabitTypes
 
 @Dao
 interface HabitsDataBaseDao {
 
     @Insert
-    fun insert(habit: Habit)
+    suspend fun insert(habit: Habit)
 
     @Update
-    fun update(habit: Habit)
+    suspend fun update(habit: Habit)
 
     @Delete
-    fun delete(habit: Habit)
-
-    @Query("SELECT * from habits_table")
-    fun getHabits(): LiveData<List<Habit>>
+    suspend fun delete(habit: Habit)
 
     @Query("SELECT * from habits_table " +
             "WHERE habit_type = :type " +
             "AND habit_title LIKE '%' || :title || '%' " +
-            "ORDER BY  habit_priority ASC")
-    fun getHabitsSortedByAscending(type: HabitTypes, title: String?): LiveData<List<Habit>>
-
-    @Query("SELECT * from habits_table " +
-            "WHERE habit_type = :type " +
-            "AND habit_title LIKE '%' || :title || '%' " +
-            "ORDER BY  habit_priority ASC")
-    fun getHabitsSortedByDescending(type: HabitTypes, title: String?): LiveData<List<Habit>>
+            "ORDER BY " +
+            "CASE WHEN :sortType = 1 THEN habit_priority END ASC, " +
+            "CASE WHEN :sortType = 2 THEN habit_priority END DESC")
+    fun getHabits(type: HabitTypes, title: String, sortType: Int): LiveData<List<Habit>>
 
     @Query("DELETE FROM habits_table")
-    fun clear()
+    suspend fun clear()
 }

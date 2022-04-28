@@ -4,13 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import ru.vidos.habitstracker.HabitsTrackerRepository
 import ru.vidos.habitstracker.models.Habit
-import ru.vidos.habitstracker.utils.HabitPriority
-import ru.vidos.habitstracker.utils.HabitTypes
+import ru.vidos.habitstracker.models.HabitPriority
+import ru.vidos.habitstracker.models.HabitTypes
 
 class AddEditHabitViewModel(
-    private val repository: HabitsTrackerRepository, private val habit: Habit?
+    private val repository: HabitsTrackerRepository, habit: Habit?
 ) : ViewModel() {
 
     private val _currentHabit = MutableLiveData<Habit>()
@@ -55,51 +57,36 @@ class AddEditHabitViewModel(
             }
     }
 
-    private fun isFieldsNotEmpty(): Boolean {
-
-        return when {
-            currentHabit.value?.title.isNullOrBlank() -> {
-                _titleError.value = "Empty title"
-                false
-            }
-            currentHabit.value?.description.isNullOrBlank() -> {
-                _descriptionError.value = "Empty description"
-                false
-            }
-            currentHabit.value?.quantity.isNullOrBlank() -> {
-                _quantityError.value = "Empty quantity"
-                false
-            }
-            currentHabit.value?.periodicity.isNullOrBlank() -> {
-                _periodicityError.value = "Empty periodicity"
-                false
-            }
-            else -> {
-                true
-            }
-        }
-    }
-
     fun setHabitType(type: HabitTypes) {
         currentHabit.value?.type = type.name
     }
 
-    fun saveHabit(): Boolean {
-        return if (isFieldsNotEmpty()) {
-            currentHabit.value?.let {
-                repository.insertHabit(it)
-            }
-            true
-        } else false
+    fun setTitleError(titleError: String) {
+        _titleError.value = titleError
     }
 
-    fun changeHabit(): Boolean {
-        return if (isFieldsNotEmpty() && habit != null) {
-            currentHabit.value?.let {
-                repository.updateHabit(it)
-            }
-            true
-        } else false
+    fun setDescriptionError(descriptionError: String) {
+        _descriptionError.value = descriptionError
+    }
+
+    fun setQuantityError(quantityError: String) {
+        _quantityError.value = quantityError
+    }
+
+    fun setPeriodicityError(periodicityError: String) {
+        _periodicityError.value = periodicityError
+    }
+
+    fun saveHabit() {
+        currentHabit.value?.let {
+            viewModelScope.launch { repository.insertHabit(it) }
+        }
+    }
+
+    fun changeHabit() {
+        currentHabit.value?.let {
+            viewModelScope.launch { repository.updateHabit(it) }
+        }
     }
 }
 

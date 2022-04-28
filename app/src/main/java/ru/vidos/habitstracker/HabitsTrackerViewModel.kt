@@ -1,50 +1,73 @@
 package ru.vidos.habitstracker
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.launch
 import ru.vidos.habitstracker.models.Habit
-import ru.vidos.habitstracker.utils.HabitTypes
+import ru.vidos.habitstracker.models.HabitTypes
+import ru.vidos.habitstracker.models.SortTypes
 
 class HabitsTrackerViewModel(private val repository: HabitsTrackerRepository) : ViewModel() {
 
-    private val _habitsList = MutableLiveData<List<Habit>>()
+    private val habitType = MutableLiveData<HabitTypes>()
+    private val searchInput = MutableLiveData<String>()
+    private val sortType = MutableLiveData(SortTypes.NONE)
+
+    private val mediatorLiveData =
+        MediatorLiveData<Triple<HabitTypes?, String?, SortTypes?>>().apply {
+            addSource(habitType) {
+                value = Triple(it, searchInput.value, sortType.value)
+            }
+            addSource(searchInput) {
+                value = Triple(habitType.value, it, sortType.value)
+            }
+            addSource(sortType) {
+                value = Triple(habitType.value, searchInput.value, it)
+            }
+        }
+
+    init {
+        searchInput.value = ""
+    }
 
     // List of Habits to display to user
-    val habitsList: LiveData<List<Habit>> = repository.getHabits()
+    val habitsList: LiveData<List<Habit>> =
+        Transformations.switchMap(mediatorLiveData) { triple ->
+            val habitType = triple.first
+            val searchInput = triple.second
+            val sortType = triple.third
+            if (habitType != null && searchInput != null && sortType != null) {
+                repository.getHabits(habitType, searchInput, sortType.ordinal)
+            } else null
 
-    fun filterHabitsByType(type: HabitTypes) {
+        }
 
-        _habitsList.value =
-            repository.getHabits().value?.filter { it.type == type.name }
+    fun setHabitType(type: HabitTypes) {
+        habitType.value = type
 
     }
 
-    fun filterHabitsByTitle(title: String) {
-
-        _habitsList.value =
-            repository.getHabits().value?.filter { it.title.startsWith(title) }
+    fun setSearchInput(title: String) {
+        searchInput.value = title
 
     }
 
     fun sortHabitsHighToLow() {
-
-        _habitsList.value =
-            repository.getHabits().value?.sortedBy { it.priority }
+        sortType.value = SortTypes.ASC
 
     }
 
     fun sortHabitsLowToHigh() {
-
-        _habitsList.value =
-            repository.getHabits().value?.sortedByDescending { it.priority }
+        sortType.value = SortTypes.DESC
     }
 
     fun deleteHabit(habit: Habit) {
-        repository.deleteHabit(habit)
+        viewModelScope.launch { repository.deleteHabit(habit)}
     }
 }
 
-class HabitsTrackerViewModelFactory(private val repository: HabitsTrackerRepository) :
-    ViewModelProvider.Factory {
+class HabitsTrackerViewModelFactory(
+    private val repository: HabitsTrackerRepository
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HabitsTrackerViewModel::class.java)) {
