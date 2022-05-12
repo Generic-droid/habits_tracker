@@ -2,34 +2,51 @@ package ru.vidos.habitstracker
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.delay
 import ru.vidos.habitstracker.data.HabitsDataBaseDao
 import ru.vidos.habitstracker.models.Habit
-import ru.vidos.habitstracker.models.HabitTypes
+import ru.vidos.habitstracker.models.UserID
+import ru.vidos.habitstracker.network.HabitsApiService
 
-class HabitsTrackerRepository(private val habitsDataBaseDao: HabitsDataBaseDao) {
+class HabitsTrackerRepository(
+    private val habitsDataBaseDao: HabitsDataBaseDao,
+    private val habitsApi: HabitsApiService.HabitsApi
+) {
 
-
-    fun getHabits(habitType: HabitTypes, title: String, sortType: Int): LiveData<List<Habit>>{
+    /**
+     * Get Habits from local DB
+     */
+    fun getHabits(habitType: Int, title: String, sortType: Int): LiveData<List<Habit>>{
         return habitsDataBaseDao.getHabits(habitType, title, sortType)
     }
 
-    // By default Room runs suspend queries off the main thread, therefore, we don't need to
-    // implement anything else to ensure we're not doing long running database work
-    // off the main thread.
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
+    /**
+     * Fetch whole List of Habits from remote server
+     * & save it to local DB
+     */
+    suspend fun fetchHabits() {
+        delay(3000)
+        val habitsList = habitsApi.retrofitService.fetchHabits()
+        habitsDataBaseDao.insert(habitsList)
+    }
+
+    /**
+     *
+     */
     suspend fun insertHabit(habit: Habit) {
+        val uid = habitsApi.retrofitService.putHabit(habit)
+        habit.uid = uid.uid
         habitsDataBaseDao.insert(habit)
     }
 
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
     suspend fun updateHabit(habit: Habit) {
+        habitsApi.retrofitService.putHabit(habit)
         habitsDataBaseDao.update(habit)
     }
 
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread  suspend fun deleteHabit(habit: Habit) {
+    suspend fun deleteHabit(habit: Habit) {
+        val uid = UserID(habit.uid)
+        habitsApi.retrofitService.deleteHabit(uid)
         habitsDataBaseDao.delete(habit)
     }
 }

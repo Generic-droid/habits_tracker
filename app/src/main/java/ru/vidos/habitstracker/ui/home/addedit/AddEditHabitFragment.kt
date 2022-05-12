@@ -3,13 +3,17 @@ package ru.vidos.habitstracker.ui.home.addedit
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import ru.vidos.habitstracker.HabitsTrackerApplication
 import ru.vidos.habitstracker.R
+import ru.vidos.habitstracker.adapters.ColorPickerRecyclerViewAdapter
 import ru.vidos.habitstracker.databinding.FragmentAddEditHabitBinding
+import ru.vidos.habitstracker.utils.GradientItemDecoration
+
 
 class AddEditHabitFragment : Fragment() {
 
@@ -37,10 +41,20 @@ class AddEditHabitFragment : Fragment() {
             FragmentAddEditHabitBinding.inflate(inflater, container, false)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         // Giving the binding access to the AddEditHabitViewModel
-        binding.addEditHabitViewModel = viewModel
+        binding.viewModel = viewModel
+
+        val colorPickerAdapter = ColorPickerRecyclerViewAdapter {
+
+            setColorFromView(it)
+        }
+
+        binding.colorPickerRecyclerView.apply {
+            adapter = colorPickerAdapter
+            addItemDecoration( GradientItemDecoration() )
+        }
 
         /*
          Ensures that all the clicks/events of
@@ -110,15 +124,35 @@ class AddEditHabitFragment : Fragment() {
                 viewModel.setDescriptionError(resources.getString(R.string.empty_description))
                 false
             }
-            viewModel.currentHabit.value?.quantity.isNullOrBlank() -> {
+            viewModel.currentHabit.value?.count == 0 -> {
                 viewModel.setQuantityError(resources.getString(R.string.empty_quantity))
                 false
             }
-            viewModel.currentHabit.value?.periodicity.isNullOrBlank() -> {
+            viewModel.currentHabit.value?.frequency == 0 -> {
                 viewModel.setPeriodicityError(resources.getString(R.string.empty_quantity))
                 false
             }
             else -> { true }
+        }
+    }
+
+    private fun setColorFromView(view: View) {
+
+        activity?.let {
+            val root: View = it.window.decorView.rootView
+
+            // Here we got whole screen bitmap
+            val screenshot = root.drawToBitmap()
+
+            // get view coordinates
+             val location = IntArray(2)
+             view.getLocationInWindow(location)
+
+            if (location[0] < 0) location[0] = 0
+
+            val pixel = screenshot.getPixel(location[0], location[1] - 24)
+
+            viewModel.setColor(pixel)
         }
     }
 }

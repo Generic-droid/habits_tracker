@@ -19,12 +19,13 @@
     <string name="new_habit">Create New Habit</string>
     <string name="save">Save</string>
     <string name="edit">Edit</string>
-    <string name="repetition">Repeat %1$s times %2$s</string>
+    <string name="repetition">Repeat: %1$s times in %2$s days</string>
     <string name="good">GOOD</string>
     <string name="bad">BAD</string>
     <string name="habit_added">New habit added</string>
     <string name="habit_deleted">Habit deleted</string>
     <string name="changes_saved">Changes saved</string>
+    <string name="api_status">API Status</string>
 
     <string-array name="habitPriority">
         <item>High</item>
@@ -43,5 +44,8 @@
     <string name="empty_description">Empty description</string>
     <string name="empty_quantity">Empty quantity</string>
     <string name="empty_periodicity">Empty periodicity</string>
+    <string name="rgb_value">RGB: %1$s</string>
+    <string name="hsv_value">HSV: %1$s</string>
+    <string name="current_color">Current color</string>
 
 </resources>

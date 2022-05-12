@@ -22,30 +22,18 @@
             android:layout_width="match_parent"
             android:layout_height="88dp">
 
-            <ImageView
-                android:id="@+id/habit_color_image_view"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="@dimen/default_margin"
-                android:layout_marginTop="@dimen/default_margin"
-                android:contentDescription="@string/habit_color"
-                android:src="@drawable/shape"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@{habit}"
-                tools:src="@drawable/shape"
-                tools:tint="@color/design_default_color_error" />
-
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/habit_type"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginTop="@dimen/default_margin"
                 android:contentDescription="@string/habit_color"
+                app:setBackgroundColor="@{habit.color}"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:src="@{habit}"
+                app:src="@{habit.type}"
                 tools:src="@drawable/ic_good_habit_smile" />
 
             <TextView
@@ -60,7 +48,7 @@
                 android:textColor="@color/mtrl_list_item_tint"
                 app:layout_constraintEnd_toStartOf="@+id/habit_priority"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/habit_color_image_view"
+                app:layout_constraintStart_toEndOf="@+id/habit_type"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Swimming" />
 
@@ -92,7 +80,7 @@
                 android:ellipsize="end"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="@color/mtrl_list_item_tint"
-                app:layout_constraintStart_toEndOf="@+id/habit_color_image_view"
+                app:layout_constraintStart_toEndOf="@+id/habit_type"
                 app:layout_constraintTop_toBottomOf="@id/habit_title"
                 app:layout_constraintEnd_toStartOf="@id/habit_priority"
                 tools:text="Swimming in swimming pool." />
@@ -104,13 +92,13 @@
                 android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginEnd="@dimen/default_margin"
                 android:maxLines="1"
-                android:text="@{@string/repetition(habit.quantity, habit.periodicity)}"
+                android:text="@{@string/repetition(habit.count, habit.frequency)}"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="@color/mtrl_list_item_tint"
                 app:layout_constraintStart_toEndOf="@id/habit_type"
                 app:layout_constraintTop_toBottomOf="@id/habit_description"
                 app:layout_constraintEnd_toStartOf="@id/habit_priority"
-                tools:text="Repeat 2 times per week" />
+                tools:text="Repeat: 2 times 3 times" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

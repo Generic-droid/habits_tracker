@@ -3,13 +3,15 @@ package ru.vidos.habitstracker.data
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import ru.vidos.habitstracker.models.Habit
-import ru.vidos.habitstracker.models.HabitTypes
 
 @Dao
 interface HabitsDataBaseDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(habit: Habit)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(habits: List<Habit>)
 
     @Update
     suspend fun update(habit: Habit)
@@ -23,7 +25,7 @@ interface HabitsDataBaseDao {
             "ORDER BY " +
             "CASE WHEN :sortType = 1 THEN habit_priority END ASC, " +
             "CASE WHEN :sortType = 2 THEN habit_priority END DESC")
-    fun getHabits(type: HabitTypes, title: String, sortType: Int): LiveData<List<Habit>>
+    fun getHabits(type: Int, title: String, sortType: Int): LiveData<List<Habit>>
 
     @Query("DELETE FROM habits_table")
     suspend fun clear()

@@ -1,19 +1,23 @@
 package ru.vidos.habitstracker
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.vidos.habitstracker.models.Habit
 import ru.vidos.habitstracker.models.HabitTypes
 import ru.vidos.habitstracker.models.SortTypes
+import ru.vidos.habitstracker.utils.Resource
 
 class HabitsTrackerViewModel(private val repository: HabitsTrackerRepository) : ViewModel() {
 
-    private val habitType = MutableLiveData<HabitTypes>()
+    private val habitType = MutableLiveData<Int>()
     private val searchInput = MutableLiveData<String>()
     private val sortType = MutableLiveData(SortTypes.NONE)
 
     private val mediatorLiveData =
-        MediatorLiveData<Triple<HabitTypes?, String?, SortTypes?>>().apply {
+        MediatorLiveData<Triple<Int?, String?, SortTypes?>>().apply {
             addSource(habitType) {
                 value = Triple(it, searchInput.value, sortType.value)
             }
@@ -25,7 +29,11 @@ class HabitsTrackerViewModel(private val repository: HabitsTrackerRepository) : 
             }
         }
 
+    private val _status = MutableLiveData<Resource.HabitsApiStatus>()
+    val status: LiveData<Resource.HabitsApiStatus> = _status
+
     init {
+        fetchHabits()
         searchInput.value = ""
     }
 
@@ -42,7 +50,7 @@ class HabitsTrackerViewModel(private val repository: HabitsTrackerRepository) : 
         }
 
     fun setHabitType(type: HabitTypes) {
-        habitType.value = type
+        habitType.value = type.ordinal
 
     }
 
@@ -61,7 +69,23 @@ class HabitsTrackerViewModel(private val repository: HabitsTrackerRepository) : 
     }
 
     fun deleteHabit(habit: Habit) {
-        viewModelScope.launch { repository.deleteHabit(habit)}
+        MainScope().launch {
+            withContext(Dispatchers.IO){
+                repository.deleteHabit(habit)
+            }
+        }
+    }
+
+    private fun fetchHabits() {
+        viewModelScope.launch {
+            _status.value = Resource.HabitsApiStatus.LOADING
+            try {
+                repository.fetchHabits()
+                _status.value = Resource.HabitsApiStatus.SUCCESS
+            } catch (e: Exception) {
+                _status.value = Resource.HabitsApiStatus.ERROR
+            }
+        }
     }
 }
 

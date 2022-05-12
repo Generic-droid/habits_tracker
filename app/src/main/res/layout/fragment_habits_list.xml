@@ -42,5 +42,13 @@
             app:srcCompat="@drawable/ic_baseline_add_24"
             android:contentDescription="@string/add_new_habit" />
 
+        <ImageView
+            android:id="@+id/status_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/api_status"
+            android:layout_gravity="center"
+            app:habitsApiStatus="@{viewModel.status}" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

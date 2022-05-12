@@ -1,39 +1,42 @@
 package ru.vidos.habitstracker.adapters
 
-import android.util.Log
+import android.graphics.Color
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.toColorInt
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 import ru.vidos.habitstracker.R
 import ru.vidos.habitstracker.models.Habit
 import ru.vidos.habitstracker.models.HabitTypes
-
-
-const val LOG_TAG = "myLogs"
+import ru.vidos.habitstracker.utils.Resource
+import kotlin.math.round
 
 @BindingAdapter("habitsListData")
-fun bindDealsRecyclerView(recyclerView: RecyclerView, data: List<Habit>?) {
+fun bindHabitsRecyclerView(recyclerView: RecyclerView, data: List<Habit>?) {
 
     val adapter = recyclerView.adapter as HabitsRecyclerViewAdapter
 
     // This call notifies the RecyclerView that a new list of data is ready.
     adapter.submitList(data)
 
-    Log.d(LOG_TAG, "BindingAdapter: $data, $adapter")
-
 }
 
-@BindingAdapter("tint")
-fun ImageView.setTintDrawable(item: Habit) {
+@BindingAdapter("rGbChannels")
+fun TextView.setRgBChannels(color: Int) {
+    text = resources.getString(R.string.rgb_value, "${color.red}, ${color.green}, ${color.blue}")
+}
 
-    setColorFilter(
-        if(item.type == HabitTypes.GOOD.name) {
-            item.color.toColorInt()
-        } else "#FF0000".toColorInt()
-            )
+@BindingAdapter("hSvColorModel")
+fun TextView.setHsVModel(color: Int){
+    val hsv = FloatArray(3)
+    Color.colorToHSV(color, hsv)
+
+    text = resources.getString(R.string.hsv_value, "${round(hsv[0])}°, ${hsv[1]}, ${hsv[2]}")
 }
 
 @BindingAdapter("priority")
@@ -45,9 +48,9 @@ fun TextView.setPriority(item: Habit) {
  * Sets the imageDrawable for the habit type
  */
 @BindingAdapter("src")
-fun ImageView.setDrawable(item: Habit) {
+fun ImageView.setDrawable(type: Int) {
     setImageResource(
-        if (item.type == HabitTypes.GOOD.name) {
+        if (type == HabitTypes.GOOD.ordinal) {
             R.drawable.ic_good_habit_smile
         }   else  R.drawable.ic_bad_habit_smile
     )
@@ -56,4 +59,22 @@ fun ImageView.setDrawable(item: Habit) {
 @BindingAdapter("errorText")
 fun TextInputLayout.setErrorMessage(errorMessage: String?) {
     error = errorMessage
+}
+
+@BindingAdapter("habitsApiStatus")
+fun ImageView.statusImageView(status: Resource.HabitsApiStatus?) {
+    when(status) {
+        Resource.HabitsApiStatus.LOADING -> {
+            visibility = View.VISIBLE
+            setImageResource(R.drawable.loading_animation)
+        }
+        Resource.HabitsApiStatus.ERROR -> {
+            visibility = View.VISIBLE
+            setImageResource(R.drawable.ic_connection_error)
+        }
+        Resource.HabitsApiStatus.SUCCESS -> {
+            visibility = View.GONE
+        }
+        else -> {}
+    }
 }

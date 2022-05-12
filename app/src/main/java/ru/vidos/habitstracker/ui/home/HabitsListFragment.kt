@@ -41,7 +41,7 @@ class HabitsListFragment : Fragment() {
         val binding = FragmentHabitsListBinding.inflate(inflater, container, false)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         // Giving the binding access to the HabitsTrackerViewModel
         binding.viewModel = viewModel

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
-            name="addEditHabitViewModel"
+            name="viewModel"
             type="ru.vidos.habitstracker.ui.home.addedit.AddEditHabitViewModel" />
         <variable
             name="habitType"
@@ -49,7 +50,7 @@
                     android:layout_weight="1"
                     app:endIconMode="clear_text"
                     app:errorEnabled="true"
-                    app:errorText="@{addEditHabitViewModel.titleError}"
+                    app:errorText="@{viewModel.titleError}"
                     app:hintTextColor="#0000FF"
                     app:layout_constraintEnd_toEndOf="@id/end_guideline"
                     app:layout_constraintStart_toStartOf="@id/start_guideline"
@@ -65,7 +66,7 @@
                         android:hint="@string/title"
                         android:inputType="text"
                         android:scrollbarStyle="outsideInset"
-                        android:text="@={addEditHabitViewModel.currentHabit.title}"/>
+                        android:text="@={viewModel.currentHabit.title}"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,7 +79,7 @@
                     android:layout_weight="1"
                     android:background="@null"
                     app:errorEnabled="true"
-                    app:errorText="@{addEditHabitViewModel.descriptionError}"
+                    app:errorText="@{viewModel.descriptionError}"
                     app:endIconMode="clear_text"
                     app:layout_constraintEnd_toEndOf="@id/end_guideline"
                     app:layout_constraintStart_toStartOf="@id/start_guideline"
@@ -95,7 +96,7 @@
                         android:hint="@string/description"
                         android:inputType="textMultiLine"
                         android:lines="2"
-                        android:text="@={addEditHabitViewModel.currentHabit.description}"/>
+                        android:text="@={viewModel.currentHabit.description}"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Spinner
@@ -105,7 +106,7 @@
                     android:layout_marginTop="@dimen/min_margin"
                     android:entries="@array/habitPriority"
                     android:minHeight="48dp"
-                    android:selectedItemPosition="@={addEditHabitViewModel.currentHabit.priority}"
+                    android:selectedItemPosition="@={viewModel.currentHabit.priority}"
                     app:layout_constraintEnd_toEndOf="@id/end_guideline"
                     app:layout_constraintStart_toStartOf="@id/start_guideline"
                     app:layout_constraintTop_toBottomOf="@id/description_input_layout" />
@@ -125,8 +126,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:checked="@{addEditHabitViewModel.currentHabit.type.equals(habitType.GOOD.name)}"
-                        android:onClick="@{() -> addEditHabitViewModel.setHabitType(habitType.GOOD)}"
+                        android:checked="@{viewModel.currentHabit.type == habitType.GOOD.ordinal()}"
+                        android:onClick="@{() -> viewModel.setHabitType(habitType.GOOD)}"
                         android:text="@string/good_habit" />
 
                     <RadioButton
@@ -134,8 +135,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:checked="@{addEditHabitViewModel.currentHabit.type.equals(habitType.BAD.name)}"
-                        android:onClick="@{() -> addEditHabitViewModel.setHabitType(habitType.BAD)}"
+                        android:checked="@{viewModel.currentHabit.type == habitType.BAD.ordinal()}"
+                        android:onClick="@{() -> viewModel.setHabitType(habitType.BAD)}"
                         android:text="@string/bad_habit" />
 
                 </RadioGroup>
@@ -151,7 +152,7 @@
                     android:background="@null"
                     app:endIconMode="clear_text"
                     app:errorEnabled="true"
-                    app:errorText="@{addEditHabitViewModel.quantityError}"
+                    app:errorText="@{viewModel.quantityError}"
                     app:layout_constraintEnd_toStartOf="@+id/periodicity_input_layout"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="@id/start_guideline"
@@ -166,7 +167,7 @@
                         android:fontFamily="@font/adamina"
                         android:hint="@string/quantity"
                         android:inputType="numberDecimal"
-                        android:text="@={addEditHabitViewModel.currentHabit.quantity}"/>
+                        android:text="@={`` + viewModel.currentHabit.count}"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -180,7 +181,7 @@
                     android:background="@null"
                     app:endIconMode="clear_text"
                     app:errorEnabled="true"
-                    app:errorText="@{addEditHabitViewModel.periodicityError}"
+                    app:errorText="@{viewModel.periodicityError}"
                     app:layout_constraintEnd_toEndOf="@id/end_guideline"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/quantity_input_layout"
@@ -194,9 +195,58 @@
                         android:ems="10"
                         android:fontFamily="@font/adamina"
                         android:hint="@string/periodicity"
-                        android:inputType="text"
-                        android:text="@={addEditHabitViewModel.currentHabit.periodicity}"/>
+                        android:inputType="numberDecimal"
+                        android:text="@={`` + viewModel.currentHabit.frequency}"/>
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/current_color_image_view"
+                    android:layout_width="46dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="@dimen/min_margin"
+                    android:baselineAlignBottom="true"
+                    app:setBackgroundColor="@{viewModel.color}"
+                    app:layout_constraintStart_toEndOf="@id/start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/quantity_input_layout"
+                    android:contentDescription="@string/current_color" />
+
+                <TextView
+                    android:id="@+id/rgb_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textSize="16sp"
+                    app:rGbChannels="@{viewModel.color}"
+                    app:layout_constraintBottom_toBottomOf="@+id/current_color_image_view"
+                    app:layout_constraintStart_toEndOf="@+id/current_color_image_view"
+                    tools:text="RGB: 255, 255, 255" />
+
+                <TextView
+                    android:id="@+id/hsv_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textSize="16sp"
+                    app:hSvColorModel="@{viewModel.color}"
+                    app:layout_constraintBottom_toBottomOf="@+id/rgb_text_view"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    tools:text="HSV: 296°, 1, 1" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/color_picker_recycler_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/min_margin"
+                    app:layoutManager=
+                        "androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="@id/end_guideline"
+                    app:layout_constraintStart_toEndOf="@id/start_guideline"
+                    app:layout_constraintTop_toBottomOf="@id/current_color_image_view"
+                    tools:listitem="@layout/habit_color_picker_item" >
+
+                </androidx.recyclerview.widget.RecyclerView>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>
