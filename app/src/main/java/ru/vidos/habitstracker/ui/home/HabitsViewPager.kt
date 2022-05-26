@@ -8,20 +8,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
-import ru.vidos.habitstracker.HabitsTrackerApplication
-import ru.vidos.habitstracker.HabitsTrackerViewModel
-import ru.vidos.habitstracker.HabitsTrackerViewModelFactory
 import ru.vidos.habitstracker.R
-import ru.vidos.habitstracker.adapters.HabitsViewPagerAdapter
 import ru.vidos.habitstracker.databinding.HabitsViewPagerBinding
-import ru.vidos.habitstracker.models.HabitTypes
+import ru.vidos.habitstracker.domain.HabitsTrackerApplication
+import ru.vidos.habitstracker.domain.models.HabitTypes
+import ru.vidos.habitstracker.ui.HabitsTrackerViewModel
+import ru.vidos.habitstracker.ui.HabitsTrackerViewModelFactory
+import ru.vidos.habitstracker.ui.adapters.HabitsViewPagerAdapter
 
 class HabitsViewPager : Fragment() {
 
     private val viewModel: HabitsTrackerViewModel by activityViewModels {
         HabitsTrackerViewModelFactory(
             (activity?.application as HabitsTrackerApplication)
-                .habitsTrackerRepository
+                .appComponent.getGetHabitsUseCase(),
+            (activity?.application as HabitsTrackerApplication)
+                .appComponent.getDeleteHabitUseCase(),
+            (activity?.application as HabitsTrackerApplication)
+                .appComponent.getFetchHabitsUseCase(),
         )
     }
 

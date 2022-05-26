@@ -1,4 +1,4 @@
-package ru.vidos.habitstracker.adapters
+package ru.vidos.habitstracker.ui.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

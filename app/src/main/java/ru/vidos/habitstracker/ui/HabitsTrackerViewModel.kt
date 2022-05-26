@@ -1,16 +1,24 @@
-package ru.vidos.habitstracker
+package ru.vidos.habitstracker.ui
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.vidos.habitstracker.models.Habit
-import ru.vidos.habitstracker.models.HabitTypes
-import ru.vidos.habitstracker.models.SortTypes
+import ru.vidos.habitstracker.domain.models.Habit
+import ru.vidos.habitstracker.domain.models.HabitTypes
+import ru.vidos.habitstracker.domain.models.SortTypes
+import ru.vidos.habitstracker.domain.usecases.DeleteHabitUseCase
+import ru.vidos.habitstracker.domain.usecases.FetchHabitsUseCase
+import ru.vidos.habitstracker.domain.usecases.GetHabitsUseCase
 import ru.vidos.habitstracker.utils.Resource
+import javax.inject.Inject
 
-class HabitsTrackerViewModel(private val repository: HabitsTrackerRepository) : ViewModel() {
+class HabitsTrackerViewModel @Inject constructor(
+    private val getHabitsUseCase: GetHabitsUseCase,
+    private val deleteHabitUseCase: DeleteHabitUseCase,
+    private val fetchHabitsUseCase: FetchHabitsUseCase
+) : ViewModel() {
 
     private val habitType = MutableLiveData<Int>()
     private val searchInput = MutableLiveData<String>()
@@ -44,7 +52,7 @@ class HabitsTrackerViewModel(private val repository: HabitsTrackerRepository) : 
             val searchInput = triple.second
             val sortType = triple.third
             if (habitType != null && searchInput != null && sortType != null) {
-                repository.getHabits(habitType, searchInput, sortType.ordinal)
+                getHabitsUseCase(habitType, searchInput, sortType.ordinal).asLiveData()
             } else null
 
         }
@@ -70,8 +78,14 @@ class HabitsTrackerViewModel(private val repository: HabitsTrackerRepository) : 
 
     fun deleteHabit(habit: Habit) {
         MainScope().launch {
+            _status.value = Resource.HabitsApiStatus.LOADING
+            try {
             withContext(Dispatchers.IO){
-                repository.deleteHabit(habit)
+                deleteHabitUseCase.invoke(habit)
+            }
+                _status.value = Resource.HabitsApiStatus.SUCCESS
+            } catch (e: Exception) {
+                _status.value = Resource.HabitsApiStatus.ERROR
             }
         }
     }
@@ -80,7 +94,7 @@ class HabitsTrackerViewModel(private val repository: HabitsTrackerRepository) : 
         viewModelScope.launch {
             _status.value = Resource.HabitsApiStatus.LOADING
             try {
-                repository.fetchHabits()
+                fetchHabitsUseCase.invoke()
                 _status.value = Resource.HabitsApiStatus.SUCCESS
             } catch (e: Exception) {
                 _status.value = Resource.HabitsApiStatus.ERROR
@@ -90,13 +104,18 @@ class HabitsTrackerViewModel(private val repository: HabitsTrackerRepository) : 
 }
 
 class HabitsTrackerViewModelFactory(
-    private val repository: HabitsTrackerRepository
+    private val getHabitsUseCase: GetHabitsUseCase,
+    private val deleteHabitUseCase: DeleteHabitUseCase,
+    private val fetchHabitsUseCase: FetchHabitsUseCase
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HabitsTrackerViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return HabitsTrackerViewModel(repository) as T
+            return HabitsTrackerViewModel(
+                getHabitsUseCase,
+                deleteHabitUseCase,
+                fetchHabitsUseCase) as T
         }
         throw IllegalArgumentException("Unknown View Model class")
     }

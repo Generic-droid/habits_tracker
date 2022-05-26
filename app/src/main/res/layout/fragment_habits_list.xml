@@ -6,14 +6,14 @@
     <data>
         <variable
             name="viewModel"
-            type="ru.vidos.habitstracker.HabitsTrackerViewModel" />
+            type="ru.vidos.habitstracker.ui.HabitsTrackerViewModel" />
 
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".ui.MainActivity">
 
         <ImageView
             android:layout_width="match_parent"
@@ -44,8 +44,8 @@
 
         <ImageView
             android:id="@+id/status_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:contentDescription="@string/api_status"
             android:layout_gravity="center"
             app:habitsApiStatus="@{viewModel.status}" />

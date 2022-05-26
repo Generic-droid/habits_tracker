@@ -1,8 +1,8 @@
-package ru.vidos.habitstracker.data
+package ru.vidos.habitstracker.data.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
-import ru.vidos.habitstracker.models.Habit
+import kotlinx.coroutines.flow.Flow
+import ru.vidos.habitstracker.domain.models.Habit
 
 @Dao
 interface HabitsDataBaseDao {
@@ -25,7 +25,7 @@ interface HabitsDataBaseDao {
             "ORDER BY " +
             "CASE WHEN :sortType = 1 THEN habit_priority END ASC, " +
             "CASE WHEN :sortType = 2 THEN habit_priority END DESC")
-    fun getHabits(type: Int, title: String, sortType: Int): LiveData<List<Habit>>
+    fun getHabits(type: Int, title: String, sortType: Int): Flow<List<Habit>>
 
     @Query("DELETE FROM habits_table")
     suspend fun clear()

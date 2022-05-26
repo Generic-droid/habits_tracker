@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="ru.vidos.habitstracker.HabitsTrackerViewModel" />
+            type="ru.vidos.habitstracker.ui.HabitsTrackerViewModel" />
 
     </data>
 

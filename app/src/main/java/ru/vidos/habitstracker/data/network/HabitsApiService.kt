@@ -1,4 +1,4 @@
-package ru.vidos.habitstracker.network
+package ru.vidos.habitstracker.data.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -7,10 +7,11 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
-import ru.vidos.habitstracker.models.Habit
-import ru.vidos.habitstracker.models.UserID
+import ru.vidos.habitstracker.domain.models.Habit
+import ru.vidos.habitstracker.domain.models.UserID
 import ru.vidos.habitstracker.utils.EndPoints
 import ru.vidos.habitstracker.utils.TokenAuthenticator
+import javax.inject.Inject
 
 val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
     level = HttpLoggingInterceptor.Level.BODY
@@ -62,7 +63,7 @@ interface HabitsApiService{
     /**
      * A public Api object that exposes the lazy-initialized Retrofit service
      */
-    object HabitsApi {
+    class HabitsApi @Inject constructor() {
         // Make this lazy initialization, to make sure it is initialized at its first usage.
         val retrofitService: HabitsApiService by lazy {
             retrofit.create(HabitsApiService::class.java)

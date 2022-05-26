@@ -1,11 +1,11 @@
-package ru.vidos.habitstracker.data
+package ru.vidos.habitstracker.data.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import ru.vidos.habitstracker.models.Habit
+import ru.vidos.habitstracker.domain.models.Habit
 import ru.vidos.habitstracker.utils.Converters
 
 @Database(entities = [Habit::class], version = 1, exportSchema = false)

@@ -1,4 +1,4 @@
-package ru.vidos.habitstracker.adapters
+package ru.vidos.habitstracker.ui.adapters
 
 import android.graphics.Color
 import android.view.View
@@ -11,8 +11,8 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 import ru.vidos.habitstracker.R
-import ru.vidos.habitstracker.models.Habit
-import ru.vidos.habitstracker.models.HabitTypes
+import ru.vidos.habitstracker.domain.models.Habit
+import ru.vidos.habitstracker.domain.models.HabitTypes
 import ru.vidos.habitstracker.utils.Resource
 import kotlin.math.round
 

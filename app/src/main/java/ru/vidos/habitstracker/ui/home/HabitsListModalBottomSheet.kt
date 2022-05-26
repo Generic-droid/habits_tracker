@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import ru.vidos.habitstracker.HabitsTrackerApplication
-import ru.vidos.habitstracker.HabitsTrackerViewModel
-import ru.vidos.habitstracker.HabitsTrackerViewModelFactory
 import ru.vidos.habitstracker.R
 import ru.vidos.habitstracker.databinding.FragmentHabitsListModalBottomSheetBinding
+import ru.vidos.habitstracker.domain.HabitsTrackerApplication
+import ru.vidos.habitstracker.ui.HabitsTrackerViewModel
+import ru.vidos.habitstracker.ui.HabitsTrackerViewModelFactory
 
 /**
  *
@@ -20,7 +20,11 @@ class HabitsListModalBottomSheet : BottomSheetDialogFragment() {
     private val viewModel: HabitsTrackerViewModel by activityViewModels {
         HabitsTrackerViewModelFactory(
             (activity?.application as HabitsTrackerApplication)
-                .habitsTrackerRepository
+                .appComponent.getGetHabitsUseCase(),
+            (activity?.application as HabitsTrackerApplication)
+                .appComponent.getDeleteHabitUseCase(),
+            (activity?.application as HabitsTrackerApplication)
+                .appComponent.getFetchHabitsUseCase(),
         )
     }
 

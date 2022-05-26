@@ -9,7 +9,7 @@
             type="ru.vidos.habitstracker.ui.home.addedit.AddEditHabitViewModel" />
         <variable
             name="habitType"
-            type="ru.vidos.habitstracker.models.HabitTypes" />
+            type="ru.vidos.habitstracker.domain.models.HabitTypes" />
     </data>
 
     <LinearLayout

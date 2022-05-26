@@ -9,19 +9,23 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import ru.vidos.habitstracker.HabitsTrackerApplication
-import ru.vidos.habitstracker.HabitsTrackerViewModel
-import ru.vidos.habitstracker.HabitsTrackerViewModelFactory
 import ru.vidos.habitstracker.R
-import ru.vidos.habitstracker.adapters.HabitsRecyclerViewAdapter
 import ru.vidos.habitstracker.databinding.FragmentHabitsListBinding
+import ru.vidos.habitstracker.domain.HabitsTrackerApplication
+import ru.vidos.habitstracker.ui.HabitsTrackerViewModel
+import ru.vidos.habitstracker.ui.HabitsTrackerViewModelFactory
+import ru.vidos.habitstracker.ui.adapters.HabitsRecyclerViewAdapter
 
 class HabitsListFragment : Fragment() {
 
     private val viewModel: HabitsTrackerViewModel by activityViewModels {
         HabitsTrackerViewModelFactory(
             (activity?.application as HabitsTrackerApplication)
-                .habitsTrackerRepository
+                .appComponent.getGetHabitsUseCase(),
+            (activity?.application as HabitsTrackerApplication)
+                .appComponent.getDeleteHabitUseCase(),
+            (activity?.application as HabitsTrackerApplication)
+                .appComponent.getFetchHabitsUseCase(),
         )
     }
 

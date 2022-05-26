@@ -1,4 +1,4 @@
-package ru.vidos.habitstracker.models
+package ru.vidos.habitstracker.domain.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

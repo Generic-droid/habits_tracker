@@ -1,4 +1,4 @@
-package ru.vidos.habitstracker
+package ru.vidos.habitstracker.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +11,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import ru.vidos.habitstracker.R
 import ru.vidos.habitstracker.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

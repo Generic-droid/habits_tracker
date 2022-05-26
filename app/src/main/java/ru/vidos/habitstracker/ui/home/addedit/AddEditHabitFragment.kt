@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import ru.vidos.habitstracker.HabitsTrackerApplication
 import ru.vidos.habitstracker.R
-import ru.vidos.habitstracker.adapters.ColorPickerRecyclerViewAdapter
 import ru.vidos.habitstracker.databinding.FragmentAddEditHabitBinding
+import ru.vidos.habitstracker.domain.HabitsTrackerApplication
+import ru.vidos.habitstracker.ui.adapters.ColorPickerRecyclerViewAdapter
 import ru.vidos.habitstracker.utils.GradientItemDecoration
 
 
@@ -22,8 +22,10 @@ class AddEditHabitFragment : Fragment() {
     private val viewModel: AddEditHabitViewModel by viewModels {
         AddEditHabitViewModelFactory(
             (activity?.application as HabitsTrackerApplication)
-                .habitsTrackerRepository, args.currentHabit
-        )
+                .appComponent.getInsertHabitUseCase(),
+            (activity?.application as HabitsTrackerApplication)
+                .appComponent.getUpdateHabitUseCase(),
+                args.currentHabit)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -9,14 +9,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.vidos.habitstracker.HabitsTrackerRepository
-import ru.vidos.habitstracker.models.Habit
-import ru.vidos.habitstracker.models.HabitPriority
-import ru.vidos.habitstracker.models.HabitTypes
+import ru.vidos.habitstracker.domain.models.Habit
+import ru.vidos.habitstracker.domain.models.HabitPriority
+import ru.vidos.habitstracker.domain.models.HabitTypes
+import ru.vidos.habitstracker.domain.usecases.InsertHabitUseCase
+import ru.vidos.habitstracker.domain.usecases.UpdateHabitUseCase
 import java.util.*
+import javax.inject.Inject
 
-class AddEditHabitViewModel(
-    private val repository: HabitsTrackerRepository, habit: Habit?
+class AddEditHabitViewModel @Inject constructor(
+    private val insertHabitUseCase: InsertHabitUseCase,
+    private val updateHabitUseCase: UpdateHabitUseCase,
+    habit: Habit?
 ) : ViewModel() {
 
     private val _currentHabit = MutableLiveData<Habit>()
@@ -85,8 +89,14 @@ class AddEditHabitViewModel(
     fun saveHabit() {
         currentHabit.value?.let {
             MainScope().launch {
+                try {
                 it.date = Calendar.getInstance().time.time
-                withContext(Dispatchers.IO) { repository.insertHabit(it) }
+
+                withContext(Dispatchers.IO) { insertHabitUseCase.invoke(it) }
+
+                } catch (e: Exception) {
+
+                }
             }
         }
     }
@@ -94,21 +104,32 @@ class AddEditHabitViewModel(
     fun changeHabit() {
         currentHabit.value?.let {
             MainScope().launch {
+                try {
+
                 it.date = Calendar.getInstance().time.time
-                withContext(Dispatchers.IO) { repository.updateHabit(it) }
+                withContext(Dispatchers.IO) { updateHabitUseCase.invoke(it) }
+
+                } catch (e: Exception) {
+
+                }
             }
         }
     }
 }
 
 class AddEditHabitViewModelFactory(
-    private val repository: HabitsTrackerRepository, private val habit: Habit?
-) : Factory {
+    private val insertHabitUseCase: InsertHabitUseCase,
+    private val updateHabitUseCase: UpdateHabitUseCase,
+    private val habit: Habit?
+    ) : Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AddEditHabitViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return AddEditHabitViewModel(repository, habit) as T
+            return AddEditHabitViewModel(
+                insertHabitUseCase,
+                updateHabitUseCase,
+                habit) as T
         }
         throw IllegalArgumentException("Unknown View Model class")
     }
