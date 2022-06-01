@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ru.vidos.habitstracker.R
 import ru.vidos.habitstracker.databinding.FragmentHabitsListBinding
-import ru.vidos.habitstracker.domain.HabitsTrackerApplication
+import ru.vidos.habitstracker.app.HabitsTrackerApplication
 import ru.vidos.habitstracker.ui.HabitsTrackerViewModel
 import ru.vidos.habitstracker.ui.HabitsTrackerViewModelFactory
 import ru.vidos.habitstracker.ui.adapters.HabitsRecyclerViewAdapter
@@ -26,6 +26,8 @@ class HabitsListFragment : Fragment() {
                 .appComponent.getDeleteHabitUseCase(),
             (activity?.application as HabitsTrackerApplication)
                 .appComponent.getFetchHabitsUseCase(),
+            (activity?.application as HabitsTrackerApplication)
+                .appComponent.getUpdateHabitCountUseCase(),
         )
     }
 
@@ -50,11 +52,16 @@ class HabitsListFragment : Fragment() {
         // Giving the binding access to the HabitsTrackerViewModel
         binding.viewModel = viewModel
 
-        val adapter = HabitsRecyclerViewAdapter {
-
+        val adapter = HabitsRecyclerViewAdapter (
+            {
             val action = HabitsListFragmentDirections.actionGlobalAddEditFragment(it)
             findNavController().navigate(action)
-        }
+            },
+
+            {
+                viewModel.updateHabitCount(it)
+            }
+        )
 
         // Sets the adapter of the HabitsRecyclerView RecyclerView
         binding.habitsRecyclerView.adapter = adapter

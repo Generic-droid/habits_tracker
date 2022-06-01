@@ -1,6 +1,7 @@
 package ru.vidos.habitstracker.ui.adapters
 
 import android.graphics.Color
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,18 +12,21 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 import ru.vidos.habitstracker.R
-import ru.vidos.habitstracker.domain.models.Habit
-import ru.vidos.habitstracker.domain.models.HabitTypes
-import ru.vidos.habitstracker.utils.Resource
+import ru.vidos.data.models.HabitDto
+import ru.vidos.data.models.HabitTypes
+import ru.vidos.data.models.Resource
 import kotlin.math.round
 
 @BindingAdapter("habitsListData")
-fun bindHabitsRecyclerView(recyclerView: RecyclerView, data: List<Habit>?) {
+fun bindHabitsRecyclerView(recyclerView: RecyclerView, data: List<HabitDto>?) {
 
     val adapter = recyclerView.adapter as HabitsRecyclerViewAdapter
 
     // This call notifies the RecyclerView that a new list of data is ready.
     adapter.submitList(data)
+
+    //TODO FIX ME LATER
+    Log.d("BindingAdapter", "New list of data")
 
 }
 
@@ -40,7 +44,7 @@ fun TextView.setHsVModel(color: Int){
 }
 
 @BindingAdapter("priority")
-fun TextView.setPriority(item: Habit) {
+fun TextView.setPriority(item: HabitDto) {
     text = resources.getStringArray(R.array.habitPriority)[item.priority]
 }
 

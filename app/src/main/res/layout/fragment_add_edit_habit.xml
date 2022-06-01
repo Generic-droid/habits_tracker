@@ -9,7 +9,7 @@
             type="ru.vidos.habitstracker.ui.home.addedit.AddEditHabitViewModel" />
         <variable
             name="habitType"
-            type="ru.vidos.habitstracker.domain.models.HabitTypes" />
+            type="ru.vidos.data.models.HabitTypes" />
     </data>
 
     <LinearLayout
@@ -66,7 +66,7 @@
                         android:hint="@string/title"
                         android:inputType="text"
                         android:scrollbarStyle="outsideInset"
-                        android:text="@={viewModel.currentHabit.title}"/>
+                        android:text="@={viewModel.currentHabitDto.title}"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,7 +96,7 @@
                         android:hint="@string/description"
                         android:inputType="textMultiLine"
                         android:lines="2"
-                        android:text="@={viewModel.currentHabit.description}"/>
+                        android:text="@={viewModel.currentHabitDto.description}"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Spinner
@@ -106,7 +106,7 @@
                     android:layout_marginTop="@dimen/min_margin"
                     android:entries="@array/habitPriority"
                     android:minHeight="48dp"
-                    android:selectedItemPosition="@={viewModel.currentHabit.priority}"
+                    android:selectedItemPosition="@={viewModel.currentHabitDto.priority}"
                     app:layout_constraintEnd_toEndOf="@id/end_guideline"
                     app:layout_constraintStart_toStartOf="@id/start_guideline"
                     app:layout_constraintTop_toBottomOf="@id/description_input_layout" />
@@ -126,7 +126,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:checked="@{viewModel.currentHabit.type == habitType.GOOD.ordinal()}"
+                        android:checked="@{viewModel.currentHabitDto.type == habitType.GOOD.ordinal()}"
                         android:onClick="@{() -> viewModel.setHabitType(habitType.GOOD)}"
                         android:text="@string/good_habit" />
 
@@ -135,7 +135,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:checked="@{viewModel.currentHabit.type == habitType.BAD.ordinal()}"
+                        android:checked="@{viewModel.currentHabitDto.type == habitType.BAD.ordinal()}"
                         android:onClick="@{() -> viewModel.setHabitType(habitType.BAD)}"
                         android:text="@string/bad_habit" />
 
@@ -167,7 +167,7 @@
                         android:fontFamily="@font/adamina"
                         android:hint="@string/quantity"
                         android:inputType="numberDecimal"
-                        android:text="@={`` + viewModel.currentHabit.count}"/>
+                        android:text="@={`` + viewModel.currentHabitDto.count}"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -196,7 +196,7 @@
                         android:fontFamily="@font/adamina"
                         android:hint="@string/periodicity"
                         android:inputType="numberDecimal"
-                        android:text="@={`` + viewModel.currentHabit.frequency}"/>
+                        android:text="@={`` + viewModel.currentHabitDto.frequency}"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView

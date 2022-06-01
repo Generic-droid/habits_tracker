@@ -8,7 +8,7 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ru.vidos.habitstracker.R
 import ru.vidos.habitstracker.databinding.FragmentHabitsListModalBottomSheetBinding
-import ru.vidos.habitstracker.domain.HabitsTrackerApplication
+import ru.vidos.habitstracker.app.HabitsTrackerApplication
 import ru.vidos.habitstracker.ui.HabitsTrackerViewModel
 import ru.vidos.habitstracker.ui.HabitsTrackerViewModelFactory
 
@@ -25,6 +25,8 @@ class HabitsListModalBottomSheet : BottomSheetDialogFragment() {
                 .appComponent.getDeleteHabitUseCase(),
             (activity?.application as HabitsTrackerApplication)
                 .appComponent.getFetchHabitsUseCase(),
+            (activity?.application as HabitsTrackerApplication)
+                .appComponent.getUpdateHabitCountUseCase(),
         )
     }
 

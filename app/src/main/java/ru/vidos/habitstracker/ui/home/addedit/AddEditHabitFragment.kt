@@ -2,7 +2,6 @@ package ru.vidos.habitstracker.ui.home.addedit
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -10,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import ru.vidos.habitstracker.R
 import ru.vidos.habitstracker.databinding.FragmentAddEditHabitBinding
-import ru.vidos.habitstracker.domain.HabitsTrackerApplication
+import ru.vidos.habitstracker.app.HabitsTrackerApplication
 import ru.vidos.habitstracker.ui.adapters.ColorPickerRecyclerViewAdapter
 import ru.vidos.habitstracker.utils.GradientItemDecoration
 
@@ -22,9 +21,9 @@ class AddEditHabitFragment : Fragment() {
     private val viewModel: AddEditHabitViewModel by viewModels {
         AddEditHabitViewModelFactory(
             (activity?.application as HabitsTrackerApplication)
-                .appComponent.getInsertHabitUseCase(),
-            (activity?.application as HabitsTrackerApplication)
                 .appComponent.getUpdateHabitUseCase(),
+            (activity?.application as HabitsTrackerApplication)
+                .appComponent.getPutHabitUseCase(),
                 args.currentHabit)
     }
 
@@ -95,9 +94,6 @@ class AddEditHabitFragment : Fragment() {
             R.id.save_habit -> {
                 if (isFieldsNotEmpty()) {
                     viewModel.saveHabit()
-                    Toast.makeText(
-                        activity, resources.getString(R.string.habit_added), Toast.LENGTH_SHORT
-                    ).show()
                     findNavController().navigateUp()
                 }
                 false
@@ -105,9 +101,6 @@ class AddEditHabitFragment : Fragment() {
             R.id.edit_habit -> {
                 if (isFieldsNotEmpty()) {
                     viewModel.changeHabit()
-                    Toast.makeText(
-                        activity, resources.getString(R.string.changes_saved), Toast.LENGTH_SHORT
-                    ).show()
                     findNavController().navigateUp()
                 }
                 false
@@ -118,19 +111,19 @@ class AddEditHabitFragment : Fragment() {
 
     private fun isFieldsNotEmpty(): Boolean {
         return when {
-            viewModel.currentHabit.value?.title.isNullOrBlank() -> {
+            viewModel.currentHabitDto.value?.title.isNullOrBlank() -> {
                 viewModel.setTitleError(resources.getString(R.string.empty_title))
                 false
             }
-            viewModel.currentHabit.value?.description.isNullOrBlank() -> {
+            viewModel.currentHabitDto.value?.description.isNullOrBlank() -> {
                 viewModel.setDescriptionError(resources.getString(R.string.empty_description))
                 false
             }
-            viewModel.currentHabit.value?.count == 0 -> {
+            viewModel.currentHabitDto.value?.count == 0 -> {
                 viewModel.setQuantityError(resources.getString(R.string.empty_quantity))
                 false
             }
-            viewModel.currentHabit.value?.frequency == 0 -> {
+            viewModel.currentHabitDto.value?.frequency == 0 -> {
                 viewModel.setPeriodicityError(resources.getString(R.string.empty_quantity))
                 false
             }

@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="habit"
-            type="ru.vidos.habitstracker.domain.models.Habit" />
+            name="HabitDto"
+            type="ru.vidos.data.models.HabitDto" />
 
     </data>
 
@@ -29,11 +29,11 @@
                 android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginTop="@dimen/default_margin"
                 android:contentDescription="@string/habit_color"
-                app:setBackgroundColor="@{habit.color}"
-                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:src="@{habit.type}"
+                app:setBackgroundColor="@{HabitDto.color}"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                app:src="@{HabitDto.type}"
                 tools:src="@drawable/ic_good_habit_smile" />
 
             <TextView
@@ -43,14 +43,45 @@
                 android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginTop="@dimen/default_margin"
                 android:maxLines="1"
-                android:text="@{habit.title}"
+                android:text="@{HabitDto.title}"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
                 android:textColor="@color/mtrl_list_item_tint"
-                app:layout_constraintEnd_toStartOf="@+id/habit_priority"
+                app:layout_constraintEnd_toStartOf="@+id/done_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/habit_type"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Swimming" />
+
+            <TextView
+                android:id="@+id/habit_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{HabitDto.description}"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="@color/mtrl_list_item_tint"
+                app:layout_constraintEnd_toStartOf="@id/done_button"
+                app:layout_constraintStart_toEndOf="@+id/habit_type"
+                app:layout_constraintTop_toBottomOf="@id/habit_title"
+                tools:text="Swimming in swimming pool." />
+
+            <TextView
+                android:id="@+id/habit_periodicity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:maxLines="1"
+                android:text="@{@string/repetition(HabitDto.count, HabitDto.frequency)}"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="@color/mtrl_list_item_tint"
+                app:layout_constraintEnd_toStartOf="@id/done_button"
+                app:layout_constraintStart_toEndOf="@id/habit_type"
+                app:layout_constraintTop_toBottomOf="@id/habit_description"
+                tools:text="Repeat: 2 times 3 times" />
 
             <TextView
                 android:id="@+id/habit_priority"
@@ -62,43 +93,22 @@
                 android:maxLines="1"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
                 android:textColor="@color/mtrl_list_item_tint"
-                app:priority="@{habit}"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/done_button"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/habit_title"
+                app:layout_constraintStart_toStartOf="@+id/done_button"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="High" />
+                app:priority="@{HabitDto}"
+                tools:text="Medium" />
 
-            <TextView
-                android:id="@+id/habit_description"
-                android:layout_width="0dp"
+            <Button
+                android:id="@+id/done_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginEnd="@dimen/default_margin"
-                android:maxLines="1"
-                android:text="@{habit.description}"
-                android:ellipsize="end"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="@color/mtrl_list_item_tint"
-                app:layout_constraintStart_toEndOf="@+id/habit_type"
-                app:layout_constraintTop_toBottomOf="@id/habit_title"
-                app:layout_constraintEnd_toStartOf="@id/habit_priority"
-                tools:text="Swimming in swimming pool." />
-
-            <TextView
-                android:id="@+id/habit_periodicity"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_margin"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:maxLines="1"
-                android:text="@{@string/repetition(habit.count, habit.frequency)}"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="@color/mtrl_list_item_tint"
-                app:layout_constraintStart_toEndOf="@id/habit_type"
-                app:layout_constraintTop_toBottomOf="@id/habit_description"
-                app:layout_constraintEnd_toStartOf="@id/habit_priority"
-                tools:text="Repeat: 2 times 3 times" />
+                android:text="@string/done"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="DONE"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

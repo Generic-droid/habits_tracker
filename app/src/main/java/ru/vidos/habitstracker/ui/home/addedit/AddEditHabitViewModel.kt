@@ -5,26 +5,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import ru.vidos.habitstracker.domain.models.Habit
-import ru.vidos.habitstracker.domain.models.HabitPriority
-import ru.vidos.habitstracker.domain.models.HabitTypes
-import ru.vidos.habitstracker.domain.usecases.InsertHabitUseCase
-import ru.vidos.habitstracker.domain.usecases.UpdateHabitUseCase
-import java.util.*
+import ru.vidos.data.models.HabitDto
+import ru.vidos.data.models.HabitPriority
+import ru.vidos.data.models.HabitTypes
+import ru.vidos.domain.usecases.PutHabitUseCase
+import ru.vidos.domain.usecases.UpdateHabitUseCase
 import javax.inject.Inject
 
 class AddEditHabitViewModel @Inject constructor(
-    private val insertHabitUseCase: InsertHabitUseCase,
     private val updateHabitUseCase: UpdateHabitUseCase,
-    habit: Habit?
+    private val putHabitUseCase: PutHabitUseCase,
+    habitDto: HabitDto?
 ) : ViewModel() {
 
-    private val _currentHabit = MutableLiveData<Habit>()
-    val currentHabit: LiveData<Habit> get() = _currentHabit
+    private val _currentHabitDto = MutableLiveData<HabitDto>()
+    val currentHabitDto: LiveData<HabitDto> get() = _currentHabitDto
 
     private val _titleError = MutableLiveData<String?>(null)
     val titleError: LiveData<String?> = _titleError
@@ -42,7 +39,7 @@ class AddEditHabitViewModel @Inject constructor(
     val color: LiveData<Int> get() = _color
 
     init {
-        _currentHabit.value = habit ?: Habit(
+        _currentHabitDto.value = habitDto ?: HabitDto(
             // id = 0,
             color = Color.BLACK,
             count = 0,
@@ -56,11 +53,11 @@ class AddEditHabitViewModel @Inject constructor(
             uid = ""
         )
 
-        _color.value = currentHabit.value?.color
+        _color.value = currentHabitDto.value?.color
     }
 
     fun setHabitType(type: HabitTypes) {
-        currentHabit.value?.type = type.ordinal
+        currentHabitDto.value?.type = type.ordinal
     }
 
     fun setTitleError(titleError: String) {
@@ -80,56 +77,46 @@ class AddEditHabitViewModel @Inject constructor(
     }
 
     fun setColor(color: Int) {
-        _currentHabit.value?.color = color
+        _currentHabitDto.value?.color = color
 
         _color.value = color
 
     }
 
     fun saveHabit() {
-        currentHabit.value?.let {
-            MainScope().launch {
-                try {
-                it.date = Calendar.getInstance().time.time
-
-                withContext(Dispatchers.IO) { insertHabitUseCase.invoke(it) }
-
-                } catch (e: Exception) {
-
-                }
+        viewModelScope.launch {
+            currentHabitDto.value?.let {
+                putHabitUseCase.invoke(
+                    HabitDto.HabitDtoMapper.mapFromDto(it)
+                )
             }
         }
     }
 
     fun changeHabit() {
-        currentHabit.value?.let {
-            MainScope().launch {
-                try {
-
-                it.date = Calendar.getInstance().time.time
-                withContext(Dispatchers.IO) { updateHabitUseCase.invoke(it) }
-
-                } catch (e: Exception) {
-
-                }
+        viewModelScope.launch {
+            currentHabitDto.value?.let {
+                updateHabitUseCase.invoke(
+                    HabitDto.HabitDtoMapper.mapFromDto(it)
+                )
             }
         }
     }
 }
 
 class AddEditHabitViewModelFactory(
-    private val insertHabitUseCase: InsertHabitUseCase,
     private val updateHabitUseCase: UpdateHabitUseCase,
-    private val habit: Habit?
+    private val putHabitUseCase: PutHabitUseCase,
+    private val habitDto: HabitDto?
     ) : Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AddEditHabitViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return AddEditHabitViewModel(
-                insertHabitUseCase,
                 updateHabitUseCase,
-                habit) as T
+                putHabitUseCase,
+                habitDto) as T
         }
         throw IllegalArgumentException("Unknown View Model class")
     }

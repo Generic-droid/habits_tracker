@@ -10,8 +10,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import ru.vidos.habitstracker.R
 import ru.vidos.habitstracker.databinding.HabitsViewPagerBinding
-import ru.vidos.habitstracker.domain.HabitsTrackerApplication
-import ru.vidos.habitstracker.domain.models.HabitTypes
+import ru.vidos.habitstracker.app.HabitsTrackerApplication
+import ru.vidos.data.models.HabitTypes
 import ru.vidos.habitstracker.ui.HabitsTrackerViewModel
 import ru.vidos.habitstracker.ui.HabitsTrackerViewModelFactory
 import ru.vidos.habitstracker.ui.adapters.HabitsViewPagerAdapter
@@ -26,6 +26,8 @@ class HabitsViewPager : Fragment() {
                 .appComponent.getDeleteHabitUseCase(),
             (activity?.application as HabitsTrackerApplication)
                 .appComponent.getFetchHabitsUseCase(),
+            (activity?.application as HabitsTrackerApplication)
+                .appComponent.getUpdateHabitCountUseCase(),
         )
     }
 
