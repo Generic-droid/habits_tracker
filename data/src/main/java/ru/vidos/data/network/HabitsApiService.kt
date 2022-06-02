@@ -79,7 +79,7 @@ class TokenAuthenticator : Authenticator {
     }
 
     companion object {
-        private const val USER_TOKEN = "8eae3a77-8547-4e12-84fd-358623e7dc39"
+        private const val USER_TOKEN = "Use your token"
     }
 }
 
